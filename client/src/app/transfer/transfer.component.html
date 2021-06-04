@@ -1,0 +1,18 @@
+<!--<div *ngIf="!connectionEstablished" class="room">
+  <button (click)="joinRoom()">join room</button>
+</div>-->
+<div *ngIf="connectionEstablished">
+  <input (change)="selectFile($event)" type="file" />
+  <button (click)="sendFile()">Send file</button>
+</div>
+<div *ngIf="!connectionEstablished">
+  <h1>Once you have a peer connection, you will be able to share files</h1>
+</div>
+<!--<div *ngIf="connectionEstablished" class="room">
+  <button (click)="exitRoom()">exit room</button>
+</div>-->
+
+<div *ngIf="gotFile">
+  <span>You have received a file. Would you like to download the file?</span>
+  <button (click)="download()">Yes</button>
+</div>

@@ -1,0 +1,1 @@
+(()=>{"use strict";let e=[];addEventListener("message",({data:s})=>{if("download"==s){const s=new Blob(e);postMessage(s),e=[]}else e.push(s)})})();
