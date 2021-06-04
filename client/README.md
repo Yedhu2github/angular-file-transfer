@@ -1,5 +1,13 @@
-# FileTransfer
+# Angular FileTransfer
 
+A simple peer-to-peer file transfer application using simple-peer
+
+
+
+Inspired from react peer-to-peer file transfer project of coding-with-chaim
+https://github.com/coding-with-chaim/file-transfer-final
+
+# Angular
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.1.
 
 ## Development server
