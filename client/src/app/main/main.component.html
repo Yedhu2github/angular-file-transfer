@@ -1,0 +1,12 @@
+<div id="file-sender-container">
+  <input (change)="inputChanged(id.value)" #id type="text" name="socketId" />
+  <app-file-sender [fileReceiver]="value"></app-file-sender>
+</div>
+<div id="file-receiver-container">
+  <ng-container *ngFor="let payload of filesArray">
+    <app-file-receiver
+      (completed)="completed($event)"
+      [payload]="payload"
+    ></app-file-receiver>
+  </ng-container>
+</div>

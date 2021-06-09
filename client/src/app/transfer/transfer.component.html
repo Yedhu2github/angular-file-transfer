@@ -1,18 +1,129 @@
-<!--<div *ngIf="!connectionEstablished" class="room">
-  <button (click)="joinRoom()">join room</button>
-</div>-->
-<div *ngIf="connectionEstablished">
-  <input (change)="selectFile($event)" type="file" />
-  <button (click)="sendFile()">Send file</button>
-</div>
-<div *ngIf="!connectionEstablished">
-  <h1>Once you have a peer connection, you will be able to share files</h1>
-</div>
-<!--<div *ngIf="connectionEstablished" class="room">
-  <button (click)="exitRoom()">exit room</button>
-</div>-->
+<div id="wrapper">
+  <!--file receiving progress-->
+  <div *ngIf="!connectionEstablished" class="stick-top col-md-12 z-index-1">
+    <div class="card m-5">
+      <div class="card-body">
+        <div *ngIf="fileStatus == 'pending'" id="notification">
+          <div class="row">
+            <div class="col-md-12">
+              <span
+                >You have received {{ this.fileNameRef }}. Would you like to
+                download the file?</span
+              >
+            </div>
+            <div class="mt-3 col-md-12 text-center">
+              <button
+                class="btn btn-primary"
+                (click)="receive(true); fileStatus = 'processing'"
+              >
+                Yes
+              </button>
+              <button
+                class="btn btn-warning ml-3"
+                (click)="receive(false); fileStatus = 'processing'"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="fileStatus == 'processing'" id="receive-progress">
+          <span class="mb-4"
+            >Sending <span class="text-info">{{ "file.name" }}</span> to
+            <span class="text-info"> {{ receiver.name }}</span></span
+          >
+          <div class="col-md-12 text-center">
+            <span class="text-small postion-absolute text-white">file</span>
+            <ngb-progressbar
+              class="mt-3"
+              type="info"
+              [value]="75"
+              [striped]="true"
+              [animated]="true"
+            ></ngb-progressbar>
+          </div>
 
-<div *ngIf="gotFile">
-  <span>You have received a file. Would you like to download the file?</span>
-  <button (click)="download()">Yes</button>
+          <div class="col-md-12 mt-4 text-center">
+            <button
+              class="btn btn-warning"
+              (click)="receive(false); fileStatus = 'received'"
+            >
+              cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="fileStatus == 'received'" id="download">
+        <div class="row m-1">
+          <div class="col-md-12">
+            <span
+              >You have received {{ this.fileNameRef }}. Would you like to
+              download the file?</span
+            >
+          </div>
+          <div class="mt-3 col-md-12 text-center">
+            <button
+              class="btn btn-success mb-2"
+              (click)="download(true); connectionEstablished = false"
+            >
+              Download
+            </button>
+
+            <button
+              class="btn btn-danger ml-3 mb-2"
+              (click)="download(false); connectionEstablished = false"
+            >
+              Discard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--file sending progress-->
+  <div class="stick-top col-md-12 z-index-1">
+    <div class="card m-5" *ngIf="connectionEstablished">
+      <div class="card-body">
+        <span class="mb-4"
+          >Sending <span class="text-info">{{ "file.name" }}</span> to
+          <span class="text-info"> {{ receiver.name }}</span></span
+        >
+        <div class="col-md-12 text-center">
+          <span class="text-small postion-absolute text-white">file</span>
+          <ngb-progressbar
+            class="mt-2"
+            type="info"
+            [value]="75"
+            [striped]="true"
+            [animated]="true"
+          ></ngb-progressbar>
+        </div>
+      </div>
+
+      <div class="col-md-12 text-center">
+        <button
+          class="mb-2 btn btn-warning"
+          (click)="connectionEstablished = false"
+        >
+          cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12" *ngIf="connectionEstablished">
+    <div class="card m-5">
+      <div class="card-head ml-4 mt-2">File Transfer</div>
+      <div class="card-body">
+        <input (change)="selectFile($event)" type="file" /> <br />
+        <div class="col-md-12 text-center">
+          <button class="button mt-5" (click)="connectionEstablished = true">
+            Send file
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

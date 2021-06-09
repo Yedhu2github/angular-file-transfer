@@ -1,0 +1,14 @@
+#file-receiver-container {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+#file-sender-container {
+  position: absolute;
+  left: 0;
+  height: 50%;
+  width: 500px;
+  overflow: auto;
+}

@@ -11,17 +11,23 @@ import { io } from 'socket.io-client';
 @Injectable()
 export class TransferComponent implements OnInit {
   constructor() {}
-
+  receiver: any = {
+    name: 'receiver',
+    socketId: '',
+  };
+  room: any;
   roomID: any = '/room/test1';
   connectionEstablished: boolean = false;
-  gotFile: boolean = false;
+  fileStatus: string = 'pending';
   file: any;
   chunksRef: any[] = [];
   socketRef: any;
   peersRef: any[] = [];
   peerRef: any;
   fileNameRef: any;
-  worker = new Worker(new URL('../file-transfer.worker', import.meta.url));
+  worker = new Worker(
+    new URL('../web-workers/file-transfer.worker', import.meta.url)
+  );
   ngOnInit(): void {
     this.worker.addEventListener('message', (event) => {
       const stream = event.data.stream();
@@ -198,7 +204,7 @@ export class TransferComponent implements OnInit {
 
   handleReceivingData(data: any) {
     if (data.toString().includes('doneSendingTheEntireFile')) {
-      this.gotFile = true;
+      this.fileStatus = 'processing';
       var parsed = JSON.parse(data);
       this.fileNameRef = parsed.fileNameRef;
       console.log(this.fileNameRef);
@@ -207,11 +213,12 @@ export class TransferComponent implements OnInit {
     }
   }
 
-  download() {
-    console.log('download() ');
+  download(download: boolean) {
+    if (!download) return (this.fileStatus = 'done');
 
-    this.gotFile = false;
+    this.fileStatus = 'done';
     this.worker.postMessage('download');
+    return;
   }
   selectFile(e: any) {
     this.file = e.target.files[0];
@@ -285,4 +292,7 @@ export class TransferComponent implements OnInit {
       });
     return;
   }
+  cancel() {}
+  done() {}
+  receive(receive: boolean) {}
 }

@@ -6,28 +6,18 @@ module.exports.listener = function (server) {
   io.on("connection", (socket) => {
     console.log(socket.id, "<== socket id updated");
 
-    socket.on("join room", (roomID) => {
-      if (users[roomID]) {
-        const length = users[roomID].length;
-        if (length === 2) {
-          socket.emit("room full");
-          return;
-        }
-        users[roomID].push(socket.id);
-      } else {
-        users[roomID] = [socket.id];
-      }
-      socketToRoom[socket.id] = roomID;
-
-      const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
-
-      socket.emit("all users", usersInThisRoom);
+    socket.on("join room", (socketID) => {
+      console.log(socketID);
+      io.to(socket.id).emit("all file receivers", [socketID]);
     });
 
     socket.on("sending signal", (payload) => {
+      console.log(payload);
       io.to(payload.userToSignal).emit("user joined", {
         signal: payload.signal,
         callerID: payload.callerID,
+        file: payload.file,
+        sender: socket.id,
       });
     });
 
